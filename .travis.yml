@@ -3,13 +3,13 @@ language: python
 python: 3.4
 os: linux
 dist: trusty
-sudo: require
 
 # Credit goes to: https://github.com/rgbkrk/libvirt-go/blob/master/.travis.yml
 install:
-  - sudo apt-get -qqy build-dep libvirt libvirt-devel
-  - sudo apt-get -qqy install curl qemu-system-x86 sasl2-bin
-  - sudo mkdir -p /usr/src && sudo chown $(id -u) /usr/src
+  - apt-get update
+  - apt-get install build-dep libvirt libvirt-devel
+  - apt-get install curl qemu-system-x86 sasl2-bin
+  - mkdir -p /usr/src && sudo chown $(id -u) /usr/src
   - curl -O -s https://libvirt.org/sources/libvirt-${LIBVIRT}.tar.${EXT}
   - tar -C /usr/src -xf libvirt-${LIBVIRT}.tar.${EXT}
   - pushd /usr/src/libvirt-${LIBVIRT}
@@ -19,11 +19,11 @@ install:
                     --without-esx --without-vbox --without-xen --without-libxl \
                     --with-qemu --with-lxc
   - make
-  - sudo make install
+  - make install
   - popd
-  - sudo libvirtd -d -l -f libvirtd.conf
-  - sudo virtlogd -d || true
-  - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
+  - libvirtd -d -l -f libvirtd.conf
+  - virtlogd -d || true
+  - chmod a+rwx /var/run/libvirt/libvirt-sock*
   - echo "pass" | sudo saslpasswd2 -p -a libvirt user
 
 deploy:
